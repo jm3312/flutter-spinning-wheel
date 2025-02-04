@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinning_wheel/flutter_spinning_wheel.dart';
 
 void main() {
-  SystemChrome.setEnabledSystemUIOverlays([]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   runApp(MyApp());
 }
 
@@ -60,14 +60,15 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  Widget buildNavigationButton({String text, Function onPressedFn}) {
-    return FlatButton(
-      color: Color.fromRGBO(255, 255, 255, 0.3),
-      textColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50.0),
+  Widget buildNavigationButton({required String text, Function? onPressedFn}) {
+    return ElevatedButton(
+      style: ButtonStyle(
+        elevation: WidgetStatePropertyAll(0.5),
+        foregroundColor: WidgetStatePropertyAll(
+          Color.fromRGBO(255, 255, 255, 0.3),
+        ),
       ),
-      onPressed: onPressedFn,
+      onPressed: () => onPressedFn,
       child: Text(
         text,
         style: TextStyle(color: Colors.white, fontSize: 18.0),
@@ -175,11 +176,12 @@ class Roulette extends StatelessWidget {
             SizedBox(height: 30),
             StreamBuilder(
               stream: _dividerController.stream,
-              builder: (context, snapshot) =>
-                  snapshot.hasData ? RouletteScore(snapshot.data) : Container(),
+              builder: (context, snapshot) => snapshot.hasData
+                  ? RouletteScore(snapshot.data as int)
+                  : Container(),
             ),
             SizedBox(height: 30),
-            new RaisedButton(
+            new ElevatedButton(
               child: new Text("Start"),
               onPressed: () =>
                   _wheelNotifier.sink.add(_generateRandomVelocity()),
